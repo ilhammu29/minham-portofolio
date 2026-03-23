@@ -1,6 +1,6 @@
 <p align="center">
   <a href="URL_GAMBAR_BANNER_PROJECT_DISINI">
-    <img src="URL_GAMBAR_BANNER_PROJECT_DISINI" alt="Minham Portofolio Banner" width="100%" style="border-radius: 8px;" />
+    <img src="landing.png" alt="Minham Portofolio Banner" width="100%" style="border-radius: 8px;" />
   </a>
 </p>
 
