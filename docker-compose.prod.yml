@@ -1,0 +1,95 @@
+services:
+  backend:
+    image: minham-portofolio-backend:latest
+    build:
+      context: ./backend
+    container_name: minham-portfolio-api
+    restart: unless-stopped
+    environment:
+      PORT: 3000
+      NODE_ENV: production
+      DATABASE_URL: file:/app/data/portfolio.db
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_PASSWORD_HASH: ${ADMIN_PASSWORD_HASH}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET}
+      ADMIN_JWT_EXPIRES: ${ADMIN_JWT_EXPIRES:-12h}
+      RUN_SEED_ON_STARTUP: ${RUN_SEED_ON_STARTUP:-false}
+    volumes:
+      - ./data:/app/data
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    networks:
+      - portfolio-net
+
+  frontend:
+    image: minham-portofolio-frontend:latest
+    build:
+      context: ./frontend
+    container_name: minham-portfolio-web
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    networks:
+      - portfolio-net
+
+  caddy:
+    image: caddy:2.8-alpine
+    container_name: minham-portfolio-proxy
+    restart: unless-stopped
+    depends_on:
+      frontend:
+        condition: service_healthy
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN: ${DOMAIN}
+      ACME_EMAIL: ${ACME_EMAIL}
+      ADMIN_ALLOWED_IPS: ${ADMIN_ALLOWED_IPS}
+      ADMIN_BASIC_USER: ${ADMIN_BASIC_USER}
+      ADMIN_BASIC_PASSWORD_HASH: ${ADMIN_BASIC_PASSWORD_HASH}
+    volumes:
+      - ./infra/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - portfolio-net
+
+  db-backup:
+    image: alpine:3.20
+    container_name: minham-portfolio-backup
+    restart: unless-stopped
+    environment:
+      DB_DIR: /data
+      BACKUP_DIR: /backups
+      DB_BASENAME: portfolio.db
+      KEEP_DAYS: ${BACKUP_KEEP_DAYS:-14}
+      BACKUP_INTERVAL_MIN: ${BACKUP_INTERVAL_MIN:-360}
+    volumes:
+      - ./data:/data:ro
+      - ./backups:/backups
+      - ./scripts/backup-db.sh:/backup-db.sh:ro
+    command: >
+      sh -c "while true; do /backup-db.sh; sleep $${BACKUP_INTERVAL_MIN}m; done"
+    networks:
+      - portfolio-net
+
+networks:
+  portfolio-net:
+    driver: bridge
+
+volumes:
+  caddy_data:
+  caddy_config:

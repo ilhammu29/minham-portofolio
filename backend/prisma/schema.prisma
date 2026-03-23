@@ -1,0 +1,107 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Profile {
+  id          Int      @id @default(1)
+  fullName    String
+  role        String
+  bio         String
+  location    String
+  email       String
+  website     String?
+  linkedin    String?
+  github      String?
+  updatedAt   DateTime @updatedAt
+}
+
+model Project {
+  id          Int      @id @default(autoincrement())
+  slug        String   @unique
+  title       String
+  description String
+  longDescription String?
+  problem     String?
+  solution    String?
+  architecture String?
+  impact      String?
+  stack       String
+  repoUrl     String?
+  liveUrl     String?
+  coverImageUrl String?
+  videoUrl    String?
+  highlight   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  media       ProjectMedia[]
+}
+
+model Experience {
+  id          Int      @id @default(autoincrement())
+  company     String
+  role        String
+  startDate   String
+  endDate     String
+  summary     String
+  createdAt   DateTime @default(now())
+}
+
+model ContactMessage {
+  id          Int      @id @default(autoincrement())
+  name        String
+  email       String
+  message     String
+  createdAt   DateTime @default(now())
+}
+
+model ProjectMedia {
+  id          Int      @id @default(autoincrement())
+  projectId   Int
+  type        String   @default("image")
+  url         String
+  caption     String?
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  project     Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId, sortOrder])
+}
+
+model ServiceItem {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+}
+
+model ProcessStep {
+  id          Int      @id @default(autoincrement())
+  stepNo      String
+  title       String
+  description String
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+}
+
+model AboutHighlight {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+}
+
+model PageEvent {
+  id          Int      @id @default(autoincrement())
+  path        String
+  event       String
+  metadata    String?
+  createdAt   DateTime @default(now())
+
+  @@index([path, createdAt])
+}

@@ -1,0 +1,316 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Syne:wght@500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color: #111111;
+  background-color: #f2f2ef;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  @apply m-0 font-sans;
+  background: #f2f2ef;
+  color: #111;
+}
+
+.theme-dark header,
+.theme-dark section,
+.theme-dark footer,
+.theme-dark article {
+  background: #111317 !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+}
+
+.theme-dark .bg-white {
+  background: #f3f4f6 !important;
+}
+
+.theme-dark .bg-white,
+.theme-dark .bg-white * {
+  color: #111827 !important;
+}
+
+.theme-dark #stats {
+  background: transparent !important;
+  border-color: transparent !important;
+}
+
+.theme-dark [class*="bg-[#f3f3f1]"],
+.theme-dark [class*="bg-[#f5f5f3]"],
+.theme-dark [class*="bg-[#f6f6f4]"],
+.theme-dark [class*="bg-[#f7f7f5]"],
+.theme-dark [class*="bg-[#f8f8f6]"],
+.theme-dark [class*="bg-[#ececea]"],
+.theme-dark [class*="bg-[#efefec]"] {
+  background: #171b22 !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+}
+
+.theme-dark [class*="from-white"],
+.theme-dark [class*="via-[#ededea]"],
+.theme-dark [class*="to-[#dcdcd9]"] {
+  --tw-gradient-from: #171b22 !important;
+  --tw-gradient-to: #11151b !important;
+  --tw-gradient-stops: var(--tw-gradient-from), #1a1f27, var(--tw-gradient-to) !important;
+}
+
+.theme-dark .hero-3d-card {
+  background: linear-gradient(145deg, #161b22, #11151b) !important;
+}
+
+.theme-dark .hero-stack-chip {
+  background: #1a1f27 !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  color: #dbe2ea !important;
+}
+
+.theme-dark .hero-online-badge {
+  background: #1a2028 !important;
+  border-color: rgba(255, 255, 255, 0.22) !important;
+  color: #dbe2ea !important;
+}
+
+.theme-dark .top-control-btn {
+  background: #1a2028 !important;
+  border-color: rgba(255, 255, 255, 0.24) !important;
+  color: #f3f4f6 !important;
+}
+
+.theme-dark .hero-project-pill {
+  background: #1a2028 !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.theme-dark .hero-project-pill span {
+  color: #e5e7eb !important;
+}
+
+.theme-dark .about-meta-card {
+  background: #1a2028 !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.theme-dark .about-meta-card p {
+  color: #e5e7eb !important;
+}
+
+.theme-dark .text-zinc-900,
+.theme-dark .text-zinc-800,
+.theme-dark .text-zinc-700 {
+  color: #e5e7eb !important;
+}
+
+.theme-dark .text-zinc-600,
+.theme-dark .text-zinc-500,
+.theme-dark .text-zinc-400 {
+  color: #cbd5e1 !important;
+}
+
+.theme-dark .text-black {
+  color: #111827 !important;
+}
+
+.theme-dark input,
+.theme-dark textarea {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.24) !important;
+  color: #f3f4f6 !important;
+}
+
+.noise-layer {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  opacity: 0.2;
+  background-image: radial-gradient(rgba(0, 0, 0, 0.16) 0.65px, transparent 0.65px);
+  background-size: 4px 4px;
+  animation: grainDrift 18s linear infinite;
+}
+
+.reveal-up-soft {
+  animation: revealUpSoft 0.8s ease both;
+}
+
+.reveal-block {
+  opacity: 0;
+  transform: translateY(24px) scale(0.99);
+  filter: blur(5px);
+  transition: opacity 0.7s ease, transform 0.7s ease, filter 0.7s ease;
+}
+
+.reveal-block.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}
+
+.scale-in {
+  animation: scaleInSoft 0.65s ease both;
+}
+
+.soft-float {
+  animation: softFloat 7s ease-in-out infinite;
+}
+
+.marquee-track {
+  width: max-content;
+  animation: marqueeMove 30s linear infinite;
+}
+
+.project-cinematic .project-meta {
+  opacity: 0.75;
+  transform: translateY(0);
+  transition: all 0.25s ease;
+}
+
+.project-cinematic:hover .project-meta {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+.pulse-ring {
+  animation: pulseRing 2.8s ease-out infinite;
+}
+
+.hero-3d-scene {
+  perspective: 1200px;
+}
+
+.hero-3d-card {
+  transform-style: preserve-3d;
+  transition: transform 0.2s ease-out;
+  box-shadow: 0 40px 70px -50px rgba(0, 0, 0, 0.6);
+}
+
+.hero-grid {
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.hero-orbit {
+  animation: heroOrbit 7s linear infinite;
+}
+
+.hero-ring {
+  animation: heroPulse 3.2s ease-in-out infinite;
+}
+
+.hero-star {
+  animation: starBlink 2.1s ease-in-out infinite;
+}
+
+@keyframes softFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes revealUpSoft {
+  0% {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleInSoft {
+  0% {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes marqueeMove {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33%);
+  }
+}
+
+@keyframes pulseRing {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.45;
+  }
+  70% {
+    transform: scale(1.15);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+}
+
+@keyframes grainDrift {
+  0% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(2px, -2px);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes heroOrbit {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(8px, -10px) rotate(180deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(360deg);
+  }
+}
+
+@keyframes heroPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.65;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.32;
+  }
+}
+
+@keyframes starBlink {
+  0%, 100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .marquee-track {
+    animation-duration: 40s;
+  }
+}

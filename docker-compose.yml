@@ -1,0 +1,55 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: minham-portfolio-api
+    restart: unless-stopped
+    environment:
+      PORT: 3000
+      NODE_ENV: production
+      DATABASE_URL: file:/app/data/portfolio.db
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-ChangeThisNow123!}
+      ADMIN_PASSWORD_HASH: ${ADMIN_PASSWORD_HASH:-}
+      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET:-change-this-jwt-secret}
+      ADMIN_JWT_EXPIRES: ${ADMIN_JWT_EXPIRES:-12h}
+      RUN_SEED_ON_STARTUP: ${RUN_SEED_ON_STARTUP:-false}
+    volumes:
+      - ./data:/app/data
+    networks:
+      - portfolio-net
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: minham-portfolio-web
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
+    networks:
+      - portfolio-net
+
+  db-backup:
+    image: alpine:3.20
+    container_name: minham-portfolio-backup
+    restart: unless-stopped
+    environment:
+      DB_DIR: /data
+      BACKUP_DIR: /backups
+      DB_BASENAME: portfolio.db
+      KEEP_DAYS: ${BACKUP_KEEP_DAYS:-14}
+      BACKUP_INTERVAL_MIN: ${BACKUP_INTERVAL_MIN:-360}
+    volumes:
+      - ./data:/data:ro
+      - ./backups:/backups
+      - ./scripts/backup-db.sh:/backup-db.sh:ro
+    command: >
+      sh -c "while true; do /backup-db.sh; sleep $${BACKUP_INTERVAL_MIN}m; done"
+    networks:
+      - portfolio-net
+
+networks:
+  portfolio-net:
+    driver: bridge

@@ -1,0 +1,23 @@
+{
+  email {$ACME_EMAIL}
+}
+
+{$DOMAIN} {
+  encode zstd gzip
+
+  @admin path /admin* /api/admin*
+  handle @admin {
+    @blocked not remote_ip {$ADMIN_ALLOWED_IPS}
+    respond @blocked "Forbidden" 403
+
+    basicauth {
+      {$ADMIN_BASIC_USER} {$ADMIN_BASIC_PASSWORD_HASH}
+    }
+
+    reverse_proxy frontend:80
+  }
+
+  handle {
+    reverse_proxy frontend:80
+  }
+}
